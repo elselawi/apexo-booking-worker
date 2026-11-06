@@ -1,0 +1,55 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "apexo-booking",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  // Text modules keep the patient page bundle inspectable in the repository.
+  "rules": [
+    {
+      "type": "Text",
+      "globs": [
+        "assets/*.css",
+        "migrations/*.sql"
+      ],
+      "fallthrough": true
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "apexo-booking",
+      "database_id": "83918ef5-79b7-4e20-ba09-b0285b426547"
+    }
+  ],
+  "triggers": {
+    "crons": [
+      "17 * * * *"
+    ]
+  },
+  // The public page's origin. `PUBLIC_ORIGIN` must equal this host exactly:
+  // it is the submission Origin check and the base of every public URL.
+  "routes": [
+    {
+      "pattern": "book.apexo.app",
+      "custom_domain": true
+    }
+  ],
+  // Deployment values. Secrets (TURNSTILE_SECRET, BOOKING_HMAC_KEY) are set
+  // with `wrangler secret put`, never here.
+  "vars": {
+    "PUBLIC_ORIGIN": "https://book.apexo.app",
+    "APP_ORIGINS": "https://web.apexo.app",
+    "TURNSTILE_SITE_KEY": "0x4AAAAAAF17HWfHzT_WW3xh",
+    "TURNSTILE_HOSTNAME": "book.apexo.app",
+    "TURNSTILE_VERIFY_TIMEOUT_MS": "8000",
+    // Connection-time public-only egress verified on this account (2026-11-06):
+    // a probe Worker's subrequests to RFC1918, CGNAT, link-local, 0.0.0.0 and
+    // loopback literals returned Cloudflare `error code: 1003`, and a hostname
+    // resolving to 127.0.0.1 returned `error code: 1016` — the edge refuses the
+    // connection before any socket opens. Re-verify before raising trust again.
+    "PROOF_EGRESS": "public-only"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

@@ -1,0 +1,17 @@
+# Copy to `.dev.vars` for local work; `wrangler dev` reads it and git ignores it.
+#
+# `wrangler dev` rewrites the Host (and therefore `Origin`) of a request to the
+# first `routes` entry, so PUBLIC_ORIGIN must match that host or every submission
+# is rejected by the same-origin check.
+PUBLIC_ORIGIN=http://book.apexo.app
+APP_ORIGINS=
+# Turnstile's official always-pass test pair. ALLOW_TEST_SECRET is what lets the
+# Worker accept them (and skip the action/hostname checks the test widget cannot
+# produce); production never sets it, so a test secret fails closed there.
+TURNSTILE_SITE_KEY=1x00000000000000000000AA
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+ALLOW_TEST_SECRET=1
+TURNSTILE_HOSTNAME=
+TURNSTILE_VERIFY_TIMEOUT_MS=8000
+BOOKING_HMAC_KEY=local-development-hmac-key-change-me-0123456789
+PROOF_EGRESS=disabled
